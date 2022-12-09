@@ -1,55 +1,63 @@
-package day1
+package main
 
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
+	"sort"
 	"strconv"
 )
 
 func main() {
-	fmt.Println(solution("input.txt"))
+	input := "resources/input.txt"
+
+	groups, length := readFile(input)
+
+	part1 := part1(groups, length)
+	part2 := part2(groups, length)
+
+	fmt.Println("Part 1: ", part1)
+	fmt.Println("Part 2: ", part2)
 }
 
-func solution(input string) int {
-	// Open the input file for reading
-	file, err := os.Open(input)
-	if err != nil {
-		log.Fatal(err)
+func part1(groups []int, length int) int {
+	sort.Ints(groups)
+
+	return groups[length-1]
+}
+
+func part2(groups []int, length int) int {
+	sum := 0
+
+	for _, calories := range groups[length-3:] {
+		sum += calories
 	}
-	defer file.Close()
 
-	// Create a scanner to read the input file line by line
-	scanner := bufio.NewScanner(file)
+	return sum
+}
 
-	// Initialize variables to keep track of the current sum and the largest sum
-	var sum, largestSum int
+func readFile(filepath string) ([]int, int) {
+	readFile, _ := os.Open(filepath)
 
-	// Read the input file line by line
+	scanner := bufio.NewScanner(readFile)
+	scanner.Split(bufio.ScanLines)
+
+	groups := []int{0}
+
 	for scanner.Scan() {
-		// Get the current line of the input file
 		line := scanner.Text()
 
-		// If the current line is empty, update the largest sum if necessary and reset the current sum
 		if line == "" {
-			if sum > largestSum {
-				largestSum = sum
-			}
-			sum = 0
+			groups = append(groups, 0)
 			continue
 		}
 
-		// Convert the current line to a number
-		num, err := strconv.Atoi(line)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Add the number to the current sum
-		sum += num
+		num, _ := strconv.Atoi(line)
+		groups[len(groups)-1] += num
 	}
 
-	// Print the largest sum
-	return largestSum
+	length := len(groups)
+
+	readFile.Close()
+	return groups, length
 }
