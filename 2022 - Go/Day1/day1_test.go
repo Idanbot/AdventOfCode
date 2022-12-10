@@ -2,12 +2,14 @@ package main
 
 import "testing"
 
-func TestPartOne(t *testing.T) {
+func loadFile() ([]int, int) {
 	input := "resources/test_input.txt"
 
-	groups, length := readFile(input)
+	return readFile(input)
+}
 
-	result := part1(groups, length)
+func TestPartOne(t *testing.T) {
+	result := part1(loadFile())
 	expected := 24000
 
 	if result != expected {
@@ -16,11 +18,7 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	input := "resources/test_input.txt"
-
-	groups, length := readFile(input)
-
-	result := part2(groups, length)
+	result := part2(loadFile())
 	expected := 45000
 
 	if result != expected {
